@@ -11,6 +11,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Current maintainer: Marcos Diez [ marcos AT unitron DOT com DOT br ]
+
 # Inspired from: https://github.com/redhat-openstack/khaleesi/blob/master/plugins/callbacks/human_log.py
 # Further improved support Ansible 2.0
 
@@ -52,7 +54,9 @@ class CallbackModule(object):
             return elem
 
         for key, value in elem.iteritems():
-            if isinstance(value, dict):
+            if isinstance(value, bool) or value is None:
+                output[key] = value
+            elif isinstance(value, dict):
                 output[key] = self._jsoner(value, gap+1)
                 # self._line_printer(gap, key, "DICT")
                 # self._jsoner(value, gap+1)
@@ -98,10 +102,13 @@ class CallbackModule(object):
         return self.v2_runner_on_failed(result)
 
     # def v2_runner_on_ok(self, result):
+    #     if result.__dict__.get("_result", {}).get("changed", False):
+    #         return self.v2_runner_on_changed(result)
+    #
     #     green_terminal_color = "\033[32m"
     #     return self._dump_helper("{}OK: [{}]: OK! =>\n", green_terminal_color, result)
-
+    #
     # def v2_runner_on_changed(self, result):
     #     yellow_terminal_color = "\033[33m"
     #     return self._dump_helper("{}changed: [{}]: changed! =>\n", yellow_terminal_color, result)
-    #
+
