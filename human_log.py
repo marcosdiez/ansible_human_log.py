@@ -24,12 +24,14 @@ try:
 except ImportError:
     import json
 
+from ansible.plugins import AnsiblePlugin
+    
 # Fields to reformat output for
 FIELDS = ['cmd', 'command', 'start', 'end', 'delta', 'msg', 'stdout',
           'stderr', 'results']
 
 
-class CallbackModule(object):
+class CallbackModule(AnsiblePlugin):
 
     """
     Ansible callback plugin for human-readable result logging
